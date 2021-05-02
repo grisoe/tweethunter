@@ -6,7 +6,7 @@ def search_in_twitter():
     today = date.today()
 
     c = twint.Config()
-    c.Search = "bigtoken"
+    c.Search = ""
     c.Hide_output = True
     c.Store_object = True
     c.Since = str(today)
