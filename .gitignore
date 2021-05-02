@@ -1,5 +1,5 @@
 /.idea/
 /venv/
 /.git/
-inTwitter.json
-inTweets.json
+conf.json
+.gitignore
