@@ -7,20 +7,27 @@ CONF_FILE = 'conf.json'
 
 
 def search_in_twitter(queries):
-    c = twint.Config()
-    c.Search = ''
-    c.Hide_output = False
-    c.Store_object = True
-    # c.Since = DATE
+    tweets = []
 
-    twint.run.Search(c)
+    for query in queries:
+        c = twint.Config()
+        c.Hide_output = True
+        c.Store_object = True
+        c.Since = '2020-01-01'
+        c.Search = query
 
-    return twint.output.tweets_list
+        twint.run.Search(c)
+
+        if len(twint.output.tweets_list) != 0:
+            tweets.append(twint.output.tweets_list)
+
+    return tweets
 
 
-def print_from_twitter(tweets):
-    for tweet in tweets:
-        print(tweet.username)
+def print_tweets(tweets):
+    for re in range(0, len(tweets)):
+        for query_result in tweets:
+            print(f'\n\n{query_result[re].tweet}\n\n')
 
 
 def get_conf_terms():
@@ -55,4 +62,5 @@ def create_search_queries(in_twitter, in_tweets):
 if __name__ == '__main__':
     in_twitter, in_tweets = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
-    search_in_twitter(queries)
+    tweets = search_in_twitter(queries)
+    print_tweets(tweets)
