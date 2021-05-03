@@ -4,6 +4,7 @@ from datetime import date
 
 DATE = str(date.today())
 CONF_FILE = 'conf.json'
+OUTPUT_FILE = 'output.json'
 
 
 def search_in_twitter(queries):
@@ -14,7 +15,7 @@ def search_in_twitter(queries):
     c.Store_object = True
     c.Store_json = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
-    c.Output = "output.json"
+    c.Output = OUTPUT_FILE
     c.Since = '2018-01-01'
     # c.Until = '2019-01-01'
 
