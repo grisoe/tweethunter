@@ -11,23 +11,24 @@ def search_in_twitter(queries):
 
     for query in queries:
         c = twint.Config()
-        c.Hide_output = True
+        c.Hide_output = False
         c.Store_object = True
-        c.Since = '2020-01-01'
+        # For testing.
+        c.Since = '2021-04-01'
         c.Search = query
 
         twint.run.Search(c)
 
-        if len(twint.output.tweets_list) != 0:
-            tweets.append(twint.output.tweets_list)
+    if len(twint.output.tweets_list) != 0:
+        tweets.append(twint.output.tweets_list)
 
     return tweets
 
 
 def print_tweets(tweets):
-    for re in range(0, len(tweets)):
-        for query_result in tweets:
-            print(f'\n\n{query_result[re].tweet}\n\n')
+    for tweet in tweets:
+        for info in tweet:
+            print(f'{info.username}, {info.tweet}, {info.link}\n\n')
 
 
 def get_conf_terms():
