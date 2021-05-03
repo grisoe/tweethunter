@@ -9,22 +9,26 @@ CONF_FILE = 'conf.json'
 def search_in_twitter(queries):
     tweets = []
 
-    for query in queries:
-        c = twint.Config()
-        c.Hide_output = False
-        c.Store_object = True
-        # For testing.
-        c.Since = '2021-04-01'
-        c.Search = query
+    c = twint.Config()
+    c.Hide_output = True
+    c.Store_object = True
+    c.Store_json = True
+    c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
+    c.Output = "output.json"
+    c.Since = '2018-01-01'
+    # c.Until = '2019-01-01'
 
+    for query in queries:
+        c.Search = query
         twint.run.Search(c)
 
-    if len(twint.output.tweets_list) != 0:
+    if twint.output.tweets_list:
         tweets.append(twint.output.tweets_list)
 
     return tweets
 
 
+# Is this function really needed?
 def print_tweets(tweets):
     for tweet in tweets:
         for info in tweet:
@@ -64,4 +68,4 @@ if __name__ == '__main__':
     in_twitter, in_tweets = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
     tweets = search_in_twitter(queries)
-    print_tweets(tweets)
+    # print_tweets(tweets)
