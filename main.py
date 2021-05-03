@@ -6,12 +6,13 @@ DATE = str(date.today())
 CONF_FILE = 'conf.json'
 
 
-def search_in_twitter():
+def search_in_twitter(in_twitter, in_tweets):
+    # TODO: Create the strings to search for. Find out if logical operations are supported in Search.
     c = twint.Config()
-    c.Search = ''
-    c.Hide_output = True
+    c.Search = 'bigtoken vpn OR termux OR hack'
+    c.Hide_output = False
     c.Store_object = True
-    c.Since = DATE
+    # c.Since = DATE
 
     twint.run.Search(c)
 
@@ -26,16 +27,31 @@ def print_from_twitter(tweets):
 def get_conf_terms():
     with open(CONF_FILE) as conf:
         terms = json.load(conf)
-        in_twitter = []
-        in_tweets = []
+        terms_twitter = []
+        terms_tweets = []
         for term in terms['inTwitter']:
-            in_twitter.append(term)
+            terms_twitter.append(term)
         for term in terms['inTweets']:
-            in_tweets.append(term)
-    return in_twitter, in_tweets
+            terms_tweets.append(term)
+    return terms_twitter, terms_tweets
+
+
+def create_search_query(in_twitter, in_tweets):
+    queries = []
+
+    for termi in range(0, len(in_twitter)):
+        query = ''
+        for term in in_tweets:
+            query = query + f' {term} OR'
+
+        query = query[0:-3]
+        query = in_twitter[termi] + query
+        queries.append(query)
+
+    return queries
 
 
 if __name__ == '__main__':
-    # print_from_twitter(search_in_twitter())
-    print(get_conf_terms()[0])
-    print(get_conf_terms()[1])
+    in_twitter, in_tweets = get_conf_terms()
+    # search_in_twitter(in_twitter, in_tweets)
+    create_search_query(in_twitter, in_tweets)
