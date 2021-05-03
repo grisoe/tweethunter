@@ -2,17 +2,16 @@ import twint
 import json
 from datetime import date
 
+DATE = str(date.today())
 CONF_FILE = 'conf.json'
 
 
 def search_in_twitter():
-    today = date.today()
-
     c = twint.Config()
     c.Search = ''
     c.Hide_output = True
     c.Store_object = True
-    c.Since = str(today)
+    c.Since = DATE
 
     twint.run.Search(c)
 
