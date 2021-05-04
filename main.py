@@ -8,32 +8,54 @@ OUTPUT_FILE = 'output.json'
 
 
 def search_in_twitter(queries):
-    tweets = []
-
     c = twint.Config()
     c.Hide_output = True
     c.Store_object = True
     c.Store_json = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = OUTPUT_FILE
-    c.Since = '2018-01-01'
+    c.Since = '2018-05-01'
     # c.Until = '2019-01-01'
 
     for query in queries:
         c.Search = query
         twint.run.Search(c)
 
+    _tweets = twint.output.tweets_list
+    twint.output.clean_lists()
+
+    return _tweets
+
+
+def search_users_profiles(users, queries):
+    tweets = []
+    print(f'BIG LIST: {twint.output.tweets_list}')
+
+    c = twint.Config()
+    c.Hide_output = True
+    c.Store_object = True
+    # c.Store_json = True
+    c.Profile_full = True
+    # c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
+    # c.Output = 'JEJEJEJE.json'
+    # c.Since = '2018-05-01'
+    # c.Until = '2019-01-01'
+
+    for user in users:
+        for query in queries:
+            c.Username = user
+            c.Search = query
+
     if twint.output.tweets_list:
         tweets.append(twint.output.tweets_list)
-
+    print(tweets)
     return tweets
 
 
 # Is this function really needed?
 def print_tweets(tweets):
-    for tweet in tweets:
-        for info in tweet:
-            print(f'{info.username}, {info.tweet}, {info.link}\n\n')
+    for index, tweet in enumerate(tweets):
+        print(f'{index}: {tweet.username}, {tweet.tweet}, {tweet.link}\n')
 
 
 def get_conf_terms():
@@ -65,8 +87,18 @@ def create_search_queries(in_twitter, in_tweets):
     return queries
 
 
+def get_users(tweets):
+    users = []
+    for tweet in tweets:
+        for info in tweet:
+            users.append(info.username)
+    return list(dict.fromkeys(users))
+
+
 if __name__ == '__main__':
     in_twitter, in_tweets = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
     tweets = search_in_twitter(queries)
-    # print_tweets(tweets)
+    # users = get_users(tweets)
+    # tweets2 = search_users_profiles(users, queries)
+    print_tweets(tweets)
