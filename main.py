@@ -28,16 +28,13 @@ def search_in_twitter(queries):
 
 
 def search_users_profiles(users, queries):
-    tweets = []
-    print(f'BIG LIST: {twint.output.tweets_list}')
-
     c = twint.Config()
     c.Hide_output = True
     c.Store_object = True
-    # c.Store_json = True
+    c.Store_json = True
     c.Profile_full = True
-    # c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
-    # c.Output = 'JEJEJEJE.json'
+    c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
+    c.Output = 'output2.json'
     # c.Since = '2018-05-01'
     # c.Until = '2019-01-01'
 
@@ -45,10 +42,11 @@ def search_users_profiles(users, queries):
         for query in queries:
             c.Username = user
             c.Search = query
+            twint.run.Search(c)
 
-    if twint.output.tweets_list:
-        tweets.append(twint.output.tweets_list)
-    print(tweets)
+    tweets = twint.output.tweets_list
+    twint.output.clean_lists()
+
     return tweets
 
 
@@ -97,9 +95,12 @@ def main():
     in_twitter, in_tweets = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
     tweets = search_in_twitter(queries)
-    users = get_users(tweets)
-    # tweets2 = search_users_profiles(users, queries)
     # print_tweets(tweets)
+    users = get_users(tweets)
+    # print(users)
+
+    tweets2 = search_users_profiles(users, queries)
+    # print_tweets(tweets2)
 
 
 if __name__ == '__main__':

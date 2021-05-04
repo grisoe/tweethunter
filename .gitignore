@@ -3,4 +3,6 @@
 /.git/
 conf.json
 output.json
+output2.json
+diff.json
 TODO
