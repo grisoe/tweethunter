@@ -21,10 +21,10 @@ def search_in_twitter(queries):
         c.Search = query
         twint.run.Search(c)
 
-    _tweets = twint.output.tweets_list
+    tweets = twint.output.tweets_list
     twint.output.clean_lists()
 
-    return _tweets
+    return tweets
 
 
 def search_users_profiles(users, queries):
@@ -87,16 +87,20 @@ def create_search_queries(in_twitter, in_tweets):
 
 
 def get_users(tweets):
-    _users = []
+    users = []
     for tweet in tweets:
-        _users.append(tweet.username)
-    return list(dict.fromkeys(_users))
+        users.append(tweet.username)
+    return list(dict.fromkeys(users))
 
 
-if __name__ == '__main__':
+def main():
     in_twitter, in_tweets = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
     tweets = search_in_twitter(queries)
     users = get_users(tweets)
     # tweets2 = search_users_profiles(users, queries)
     # print_tweets(tweets)
+
+
+if __name__ == '__main__':
+    main()
