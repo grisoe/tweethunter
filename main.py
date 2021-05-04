@@ -52,7 +52,6 @@ def search_users_profiles(users, queries):
     return tweets
 
 
-# Is this function really needed?
 def print_tweets(tweets):
     for index, tweet in enumerate(tweets):
         print(f'{index}: {tweet.username}, {tweet.tweet}, {tweet.link}\n')
@@ -88,17 +87,16 @@ def create_search_queries(in_twitter, in_tweets):
 
 
 def get_users(tweets):
-    users = []
+    _users = []
     for tweet in tweets:
-        for info in tweet:
-            users.append(info.username)
-    return list(dict.fromkeys(users))
+        _users.append(tweet.username)
+    return list(dict.fromkeys(_users))
 
 
 if __name__ == '__main__':
     in_twitter, in_tweets = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
     tweets = search_in_twitter(queries)
-    # users = get_users(tweets)
+    users = get_users(tweets)
     # tweets2 = search_users_profiles(users, queries)
-    print_tweets(tweets)
+    # print_tweets(tweets)
