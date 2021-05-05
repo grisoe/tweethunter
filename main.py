@@ -4,7 +4,9 @@ from datetime import date
 
 DATE = str(date.today())
 CONF_FILE = 'conf.json'
-OUTPUT_FILE = 'output.json'
+
+TWITTER_OUTPUT_FILE = 'output.json'
+TWEETS_OUTPUT_FILE = 'output2.json'
 
 
 def search_in_twitter(queries):
@@ -13,7 +15,7 @@ def search_in_twitter(queries):
     c.Store_object = True
     c.Store_json = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
-    c.Output = OUTPUT_FILE
+    c.Output = TWITTER_OUTPUT_FILE
     c.Since = '2020-05-01'
     # c.Until = '2019-01-01'
 
@@ -34,7 +36,7 @@ def search_users_profiles(users, queries):
     c.Store_json = True
     c.Profile_full = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
-    c.Output = 'output2.json'
+    c.Output = TWEETS_OUTPUT_FILE
     c.Since = '2020-05-01'
     # c.Until = '2019-01-01'
 
@@ -60,13 +62,16 @@ def get_conf_terms():
         terms = json.load(conf)
         terms_twitter = []
         terms_tweets = []
+        to_ommit = []
 
         for term in terms['inTwitter']:
             terms_twitter.append(term)
         for term in terms['inTweets']:
             terms_tweets.append(term)
+        for term in terms['remove']:
+            to_ommit.append(term)
 
-    return terms_twitter, terms_tweets
+    return terms_twitter, terms_tweets, to_ommit
 
 
 def create_search_queries(in_twitter, in_tweets):
@@ -91,18 +96,29 @@ def get_users(tweets):
     return list(dict.fromkeys(users))
 
 
+def clean_users(users, to_skip):
+    to_skip = [x.lower() for x in to_skip]
+    return list(set(users) - set(to_skip))
+
+
 def main():
-    in_twitter, in_tweets = get_conf_terms()
+    in_twitter, in_tweets, to_skip = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
 
     tweets = search_in_twitter(queries)
-    # print(f'Tweets length: {len(tweets)}')
     # print_tweets(tweets)
+    # print(f'Tweets length: {len(tweets)}')
 
     users = get_users(tweets)
+    # print(f'Users: {users}')
     # print(f'Users length: {len(users)}')
 
-    tweets2 = search_users_profiles(users, queries)
+    users_clean = clean_users(users, to_skip)
+    # print(f'Users clean: {users_clean}')
+    # print(f'Users clean length: {len(users_clean)}')
+
+    # Commented for testing purposes.
+    # tweets2 = search_users_profiles(users, queries)
     # print(f'Tweets2 length: {len(tweets2)}')
     # print_tweets(tweets2)
 
