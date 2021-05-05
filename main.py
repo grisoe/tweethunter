@@ -10,18 +10,7 @@ TWEETS_OUTPUT_FILE = 'output2.json'
 
 
 def twitter_search(queries):
-    c = twint.Config()
-    c.Hide_output = True
-    c.Store_object = True
-    c.Store_json = True
-    c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
-    c.Output = TWITTER_OUTPUT_FILE
-    c.Since = '2021-01-01'
-
-    # c.Until = '2019-01-01'
-    # c.Filter_retweets = True
-    # c.Retweets = True
-    # c.Lowercase = True
+    c = twint_conf(TWITTER_OUTPUT_FILE)
 
     for query in queries:
         c.Search = query
@@ -34,19 +23,8 @@ def twitter_search(queries):
 
 
 def search_users_prof(users_clean, queries):
-    c = twint.Config()
-    c.Hide_output = True
-    c.Store_object = True
-    c.Store_json = True
+    c = twint_conf(TWEETS_OUTPUT_FILE)
     c.Profile_full = True
-    c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
-    c.Output = TWEETS_OUTPUT_FILE
-    c.Since = '2021-01-01'
-
-    # c.Retweets = True
-    # c.Lowercase = True
-    # c.Until = '2019-01-01'
-    # c.All = True
 
     for user in users_clean:
         for query in queries:
@@ -58,6 +36,18 @@ def search_users_prof(users_clean, queries):
     twint.output.clean_lists()
 
     return tweets
+
+
+def twint_conf(output_file):
+    c = twint.Config()
+    c.Hide_output = True
+    c.Store_object = True
+    c.Store_json = True
+    c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
+    c.Output = output_file
+    c.Since = '2021-04-01'
+    # c.Until = '2019-01-01'
+    return c
 
 
 def print_tweets(tweets):
