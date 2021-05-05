@@ -62,16 +62,16 @@ def get_conf_terms():
         terms = json.load(conf)
         terms_twitter = []
         terms_tweets = []
-        to_ommit = []
+        to_skip = []
 
         for term in terms['inTwitter']:
             terms_twitter.append(term)
         for term in terms['inTweets']:
             terms_tweets.append(term)
         for term in terms['remove']:
-            to_ommit.append(term)
+            to_skip.append(term)
 
-    return terms_twitter, terms_tweets, to_ommit
+    return terms_twitter, terms_tweets, to_skip
 
 
 def create_search_queries(in_twitter, in_tweets):
@@ -118,9 +118,9 @@ def main():
     # print(f'Users clean length: {len(users_clean)}')
 
     # Commented for testing purposes.
-    # tweets2 = search_users_profiles(users, queries)
-    # print(f'Tweets2 length: {len(tweets2)}')
-    # print_tweets(tweets2)
+    # tweets_prof = search_users_profiles(users, queries)
+    # print(f'Tweets Prof length: {len(tweets_prof)}')
+    # print_tweets(tweets_prof)
 
 
 if __name__ == '__main__':
