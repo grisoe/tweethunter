@@ -1,5 +1,6 @@
 import twint
 import json
+import os
 from datetime import date
 
 DATE = str(date.today())
@@ -16,7 +17,7 @@ def twint_conf(output_file):
     c.Store_json = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = output_file
-    c.Since = '2021-02-01'
+    # c.Since = '2018-03-01'
     # c.Until = '2019-01-01'
     return c
 
@@ -99,6 +100,24 @@ def clean_users(users, to_skip):
     return list(set(users) - set(to_skip))
 
 
+def remove_tweets_from_users(to_skip):
+    lines = []
+    to_skip = [ts.lower() for ts in to_skip]
+
+    with open(TWITTER_OUTPUT_FILE, 'r') as f:
+        for line in f:
+            lines.append(line)
+
+    with open('final.json', 'w') as f2:
+        for line in lines:
+            tweet_un = json.loads(line)['username'].lower()
+            if tweet_un not in to_skip:
+                f2.write(line)
+
+    if os.path.exists(TWITTER_OUTPUT_FILE):
+        os.remove(TWITTER_OUTPUT_FILE)
+
+
 def main():
     in_twitter, in_tweets, to_skip = get_conf()
     queries = create_search_queries(in_twitter, in_tweets)
@@ -115,7 +134,9 @@ def main():
     # print(f'Users clean: {users_clean}')
     # print(f'Users clean length: {len(users_clean)}')
 
-    tweets_prof = search_users_prof(users_clean, queries)
+    remove_tweets_from_users(to_skip)
+
+    # tweets_prof = search_users_prof(users_clean, queries)
     # print(f'Tweets Prof length: {len(tweets_prof)}')
     # print_tweets(tweets_prof)
 
