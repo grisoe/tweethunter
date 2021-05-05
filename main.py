@@ -9,15 +9,19 @@ TWITTER_OUTPUT_FILE = 'output.json'
 TWEETS_OUTPUT_FILE = 'output2.json'
 
 
-def search_in_twitter(queries):
+def twitter_search(queries):
     c = twint.Config()
     c.Hide_output = True
     c.Store_object = True
     c.Store_json = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = TWITTER_OUTPUT_FILE
-    c.Since = '2020-05-01'
+    c.Since = '2021-01-01'
+
     # c.Until = '2019-01-01'
+    # c.Filter_retweets = True
+    # c.Retweets = True
+    # c.Lowercase = True
 
     for query in queries:
         c.Search = query
@@ -29,7 +33,7 @@ def search_in_twitter(queries):
     return tweets
 
 
-def search_users_profiles(users, queries):
+def search_users_prof(users_clean, queries):
     c = twint.Config()
     c.Hide_output = True
     c.Store_object = True
@@ -37,10 +41,14 @@ def search_users_profiles(users, queries):
     c.Profile_full = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = TWEETS_OUTPUT_FILE
-    c.Since = '2020-05-01'
-    # c.Until = '2019-01-01'
+    c.Since = '2021-01-01'
 
-    for user in users:
+    # c.Retweets = True
+    # c.Lowercase = True
+    # c.Until = '2019-01-01'
+    # c.All = True
+
+    for user in users_clean:
         for query in queries:
             c.Username = user
             c.Search = query
@@ -57,21 +65,21 @@ def print_tweets(tweets):
         print(f'{index}: {tweet.username}, {tweet.tweet}, {tweet.link}\n')
 
 
-def get_conf_terms():
+def get_conf():
     with open(CONF_FILE) as conf:
         terms = json.load(conf)
-        terms_twitter = []
-        terms_tweets = []
+        in_twitter = []
+        in_tweets = []
         to_skip = []
 
         for term in terms['inTwitter']:
-            terms_twitter.append(term)
+            in_twitter.append(term)
         for term in terms['inTweets']:
-            terms_tweets.append(term)
+            in_tweets.append(term)
         for term in terms['remove']:
             to_skip.append(term)
 
-    return terms_twitter, terms_tweets, to_skip
+    return in_twitter, in_tweets, to_skip
 
 
 def create_search_queries(in_twitter, in_tweets):
@@ -102,10 +110,10 @@ def clean_users(users, to_skip):
 
 
 def main():
-    in_twitter, in_tweets, to_skip = get_conf_terms()
+    in_twitter, in_tweets, to_skip = get_conf()
     queries = create_search_queries(in_twitter, in_tweets)
 
-    tweets = search_in_twitter(queries)
+    tweets = twitter_search(queries)
     # print_tweets(tweets)
     # print(f'Tweets length: {len(tweets)}')
 
@@ -117,8 +125,7 @@ def main():
     # print(f'Users clean: {users_clean}')
     # print(f'Users clean length: {len(users_clean)}')
 
-    # Commented for testing purposes.
-    # tweets_prof = search_users_profiles(users, queries)
+    tweets_prof = search_users_prof(users_clean, queries)
     # print(f'Tweets Prof length: {len(tweets_prof)}')
     # print_tweets(tweets_prof)
 
