@@ -14,7 +14,7 @@ def search_in_twitter(queries):
     c.Store_json = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = OUTPUT_FILE
-    c.Since = '2018-05-01'
+    c.Since = '2020-05-01'
     # c.Until = '2019-01-01'
 
     for query in queries:
@@ -35,7 +35,7 @@ def search_users_profiles(users, queries):
     c.Profile_full = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = 'output2.json'
-    # c.Since = '2018-05-01'
+    c.Since = '2020-05-01'
     # c.Until = '2019-01-01'
 
     for user in users:
@@ -94,12 +94,16 @@ def get_users(tweets):
 def main():
     in_twitter, in_tweets = get_conf_terms()
     queries = create_search_queries(in_twitter, in_tweets)
+
     tweets = search_in_twitter(queries)
+    # print(f'Tweets length: {len(tweets)}')
     # print_tweets(tweets)
+
     users = get_users(tweets)
-    # print(users)
+    # print(f'Users length: {len(users)}')
 
     tweets2 = search_users_profiles(users, queries)
+    # print(f'Tweets2 length: {len(tweets2)}')
     # print_tweets(tweets2)
 
 
