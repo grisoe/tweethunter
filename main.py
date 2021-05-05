@@ -6,8 +6,9 @@ from datetime import date
 DATE = str(date.today())
 CONF_FILE = 'conf.json'
 
-TWITTER_OUTPUT_FILE = 'output.json'
-TWEETS_OUTPUT_FILE = 'output2.json'
+TEMP_OUTPUT_FILE = 'temp.json'
+TWEETS_OUTPUT_FILE = 'temp2.json'
+FINAL_OUTPUT_FILE = 'tweets.json'
 
 
 def twint_conf(output_file):
@@ -23,7 +24,7 @@ def twint_conf(output_file):
 
 
 def search_twitter(queries):
-    c = twint_conf(TWITTER_OUTPUT_FILE)
+    c = twint_conf(TEMP_OUTPUT_FILE)
 
     for query in queries:
         c.Search = query
@@ -101,40 +102,49 @@ def clean_users(users, to_skip):
 
 
 def remove_tweets_from_users(to_skip):
-    lines = []
     to_skip = [ts.lower() for ts in to_skip]
+    lines = file_to_list()
 
-    with open(TWITTER_OUTPUT_FILE, 'r') as f:
-        for line in f:
-            lines.append(line)
-
-    with open('final.json', 'w') as f2:
+    with open(FINAL_OUTPUT_FILE, 'w') as f:
         for line in lines:
             tweet_un = json.loads(line)['username'].lower()
             if tweet_un not in to_skip:
-                f2.write(line)
+                f.write(line)
 
-    if os.path.exists(TWITTER_OUTPUT_FILE):
-        os.remove(TWITTER_OUTPUT_FILE)
+    remove_temp_file()
+
+
+def file_to_list():
+    lines = []
+    with open(TEMP_OUTPUT_FILE, 'r') as f:
+        for line in f:
+            lines.append(line)
+    return lines
+
+
+def remove_temp_file():
+    if os.path.exists(TEMP_OUTPUT_FILE):
+        os.remove(TEMP_OUTPUT_FILE)
 
 
 def main():
     in_twitter, in_tweets, to_skip = get_conf()
     queries = create_search_queries(in_twitter, in_tweets)
 
-    tweets = search_twitter(queries)
+    search_twitter(queries)
+    remove_tweets_from_users(to_skip)
+
+    # tweets = search_twitter(queries)
     # print_tweets(tweets)
     # print(f'Tweets length: {len(tweets)}')
 
-    users = get_users(tweets)
+    # users = get_users(tweets)
     # print(f'Users: {users}')
     # print(f'Users length: {len(users)}')
 
-    users_clean = clean_users(users, to_skip)
+    # users_clean = clean_users(users, to_skip)
     # print(f'Users clean: {users_clean}')
     # print(f'Users clean length: {len(users_clean)}')
-
-    remove_tweets_from_users(to_skip)
 
     # tweets_prof = search_users_prof(users_clean, queries)
     # print(f'Tweets Prof length: {len(tweets_prof)}')

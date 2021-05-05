@@ -3,7 +3,7 @@
 /.git/
 /output/
 conf.json
-output.json
-output2.json
-diff.json
+temp.json
+temp2.json
+tweets.json
 TODO
