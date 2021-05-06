@@ -15,10 +15,6 @@ FINAL_OUTPUT_FILE = 'tweets.json'
 
 
 def get_arguments():
-    global SINCE_DATE
-    global UNTIL_DATE
-    global CONF_FILE
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-s', '--since', dest="since_date", help="Search since this date.")
@@ -27,14 +23,20 @@ def get_arguments():
 
     options = parser.parse_args()
 
+    return options
+
+
+def set_globals(options):
+    global SINCE_DATE
+    global UNTIL_DATE
+    global CONF_FILE
+
     if options.since_date:
         SINCE_DATE = options.since_date
     if options.until_date:
         UNTIL_DATE = options.until_date
     if options.conf_file:
         CONF_FILE = options.conf_file
-
-    return options
 
 
 def twint_conf(output_file):
@@ -155,6 +157,7 @@ def remove_temp_file():
 
 def main():
     options = get_arguments()
+    set_globals(options)
 
     in_twitter, in_tweets, to_skip = get_conf()
     queries = create_search_queries(in_twitter, in_tweets)
