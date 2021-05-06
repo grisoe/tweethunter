@@ -10,7 +10,7 @@ UNTIL_DATE = str(date.today())
 CONF_FILE = 'conf.json'
 
 TEMP_OUTPUT_FILE = 'temp.json'
-TWEETS_OUTPUT_FILE = 'temp2.json'
+TWEETS_OUTPUT_FILE = ''
 FINAL_OUTPUT_FILE = 'tweets.json'
 
 
@@ -133,7 +133,7 @@ def remove_tweets_from_users(to_skip):
     to_skip = [ts.lower() for ts in to_skip]
     lines = file_to_list()
 
-    with open(FINAL_OUTPUT_FILE, 'w') as f:
+    with open(FINAL_OUTPUT_FILE, 'w+') as f:
         for line in lines:
             tweet_un = json.loads(line)['username'].lower()
             if tweet_un not in to_skip:
@@ -144,7 +144,7 @@ def remove_tweets_from_users(to_skip):
 
 def file_to_list():
     lines = []
-    with open(TEMP_OUTPUT_FILE, 'r') as f:
+    with open(TEMP_OUTPUT_FILE, 'r+') as f:
         for line in f:
             lines.append(line)
     return lines
@@ -163,23 +163,25 @@ def main():
     queries = create_search_queries(in_twitter, in_tweets)
 
     search_twitter(queries)
-    remove_tweets_from_users(to_skip)
 
-    # tweets = search_twitter(queries)
-    # print_tweets(tweets)
-    # print(f'Tweets length: {len(tweets)}')
+    if os.path.exists(TEMP_OUTPUT_FILE):
+        remove_tweets_from_users(to_skip)
 
-    # users = get_users(tweets)
-    # print(f'Users: {users}')
-    # print(f'Users length: {len(users)}')
+        # tweets = search_twitter(queries)
+        # print_tweets(tweets)
+        # print(f'Tweets length: {len(tweets)}')
 
-    # users_clean = clean_users(users, to_skip)
-    # print(f'Users clean: {users_clean}')
-    # print(f'Users clean length: {len(users_clean)}')
+        # users = get_users(tweets)
+        # print(f'Users: {users}')
+        # print(f'Users length: {len(users)}')
 
-    # tweets_prof = search_users_prof(users_clean, queries)
-    # print(f'Tweets Prof length: {len(tweets_prof)}')
-    # print_tweets(tweets_prof)
+        # users_clean = clean_users(users, to_skip)
+        # print(f'Users clean: {users_clean}')
+        # print(f'Users clean length: {len(users_clean)}')
+
+        # tweets_prof = search_users_prof(users_clean, queries)
+        # print(f'Tweets Prof length: {len(tweets_prof)}')
+        # print_tweets(tweets_prof)
 
 
 if __name__ == '__main__':
