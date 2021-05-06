@@ -1,10 +1,12 @@
 import argparse
-import twint
 import json
 import os
-from datetime import date
+from datetime import date, timedelta
 
-DATE = str(date.today())
+import twint
+
+SINCE_DATE = str((date.today() - timedelta(days=7)).strftime('%Y-%m-%d'))
+UNTIL_DATE = str(date.today())
 CONF_FILE = 'conf.json'
 
 TEMP_OUTPUT_FILE = 'temp.json'
@@ -13,16 +15,19 @@ FINAL_OUTPUT_FILE = 'tweets.json'
 
 
 def get_arguments():
+    global SINCE_DATE
+    global UNTIL_DATE
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--target', dest="target_ip", help="IP of the target.")
-    parser.add_argument('-g', '--gateway', dest="gateway_ip", help="IP of the gateway.")
+    parser.add_argument('-s', '--since', dest="since_date", help="Search since this date.")
+    parser.add_argument('-u', '--until', dest="until_date", help="Search until this date.")
 
     options = parser.parse_args()
 
-    if not options.target_ip:
-        parser.error('[-] Please specify the target\'s IP, use --help for more info.')
-    elif not options.gateway_ip:
-        parser.error('[-] Please specify the gateway\'s IP, use --help for more info.')
+    if options.since_date:
+        SINCE_DATE = options.since_date
+    if options.until_date:
+        UNTIL_DATE = options.until_date
 
     return options
 
