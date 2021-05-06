@@ -167,22 +167,6 @@ def main():
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
 
-        # tweets = search_twitter(queries)
-        # print_tweets(tweets)
-        # print(f'Tweets length: {len(tweets)}')
-
-        # users = get_users(tweets)
-        # print(f'Users: {users}')
-        # print(f'Users length: {len(users)}')
-
-        # users_clean = clean_users(users, to_skip)
-        # print(f'Users clean: {users_clean}')
-        # print(f'Users clean length: {len(users_clean)}')
-
-        # tweets_prof = search_users_prof(users_clean, queries)
-        # print(f'Tweets Prof length: {len(tweets_prof)}')
-        # print_tweets(tweets_prof)
-
 
 if __name__ == '__main__':
     main()
