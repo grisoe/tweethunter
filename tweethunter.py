@@ -151,8 +151,7 @@ def file_to_list():
 
 
 def remove_temp_file():
-    if os.path.exists(TEMP_OUTPUT_FILE):
-        os.remove(TEMP_OUTPUT_FILE)
+    os.remove(TEMP_OUTPUT_FILE)
 
 
 def main():
