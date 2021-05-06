@@ -1,3 +1,4 @@
+import argparse
 import twint
 import json
 import os
@@ -9,6 +10,21 @@ CONF_FILE = 'conf.json'
 TEMP_OUTPUT_FILE = 'temp.json'
 TWEETS_OUTPUT_FILE = 'temp2.json'
 FINAL_OUTPUT_FILE = 'tweets.json'
+
+
+def get_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--target', dest="target_ip", help="IP of the target.")
+    parser.add_argument('-g', '--gateway', dest="gateway_ip", help="IP of the gateway.")
+
+    options = parser.parse_args()
+
+    if not options.target_ip:
+        parser.error('[-] Please specify the target\'s IP, use --help for more info.')
+    elif not options.gateway_ip:
+        parser.error('[-] Please specify the gateway\'s IP, use --help for more info.')
+
+    return options
 
 
 def twint_conf(output_file):
@@ -128,6 +144,8 @@ def remove_temp_file():
 
 
 def main():
+    options = get_arguments()
+
     in_twitter, in_tweets, to_skip = get_conf()
     queries = create_search_queries(in_twitter, in_tweets)
 
