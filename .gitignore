@@ -1,9 +1,7 @@
 /.idea/
 /venv/
 /.git/
-/output/
 conf.json
 temp.json
-temp2.json
 tweets.json
 TODO

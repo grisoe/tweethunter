@@ -8,10 +8,9 @@ import twint
 
 SINCE_DATE = str((date.today() - timedelta(days=7)).strftime('%Y-%m-%d'))
 UNTIL_DATE = str(date.today())
-CONF_FILE = 'conf.json'
 
+CONF_FILE = 'conf.json'
 TEMP_OUTPUT_FILE = 'temp.json'
-TWEETS_OUTPUT_FILE = ''
 FINAL_OUTPUT_FILE = 'tweets.json'
 
 
@@ -65,27 +64,6 @@ def search_twitter(queries):
     return tweets
 
 
-def search_users_prof(users_clean, queries):
-    c = twint_conf(TWEETS_OUTPUT_FILE)
-    c.Profile_full = True
-
-    for user in users_clean:
-        for query in queries:
-            c.Username = user
-            c.Search = query
-            twint.run.Search(c)
-
-    tweets = twint.output.tweets_list
-    twint.output.clean_lists()
-
-    return tweets
-
-
-def print_tweets(tweets):
-    for index, tweet in enumerate(tweets):
-        print(f'{index}: {tweet.username}, {tweet.tweet}, {tweet.link}\n')
-
-
 def get_conf():
     in_twitter = []
     in_tweets = []
@@ -117,18 +95,6 @@ def create_search_queries(in_twitter, in_tweets):
         queries.append(query)
 
     return queries
-
-
-def get_users(tweets):
-    users = []
-    for tweet in tweets:
-        users.append(tweet.username)
-    return list(dict.fromkeys(users))
-
-
-def clean_users(users, to_skip):
-    to_skip = [x.lower() for x in to_skip]
-    return list(set(users) - set(to_skip))
 
 
 def remove_tweets_from_users(to_skip):
