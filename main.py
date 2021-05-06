@@ -17,10 +17,13 @@ FINAL_OUTPUT_FILE = 'tweets.json'
 def get_arguments():
     global SINCE_DATE
     global UNTIL_DATE
+    global CONF_FILE
 
     parser = argparse.ArgumentParser()
+
     parser.add_argument('-s', '--since', dest="since_date", help="Search since this date.")
     parser.add_argument('-u', '--until', dest="until_date", help="Search until this date.")
+    parser.add_argument('-c', '--conf', dest="conf_file", help="Configuration file.")
 
     options = parser.parse_args()
 
@@ -28,6 +31,8 @@ def get_arguments():
         SINCE_DATE = options.since_date
     if options.until_date:
         UNTIL_DATE = options.until_date
+    if options.conf_file:
+        CONF_FILE = options.conf_file
 
     return options
 
@@ -39,8 +44,8 @@ def twint_conf(output_file):
     c.Store_json = True
     c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = output_file
-    # c.Since = '2018-03-01'
-    # c.Until = '2019-01-01'
+    c.Since = SINCE_DATE
+    c.Until = UNTIL_DATE
     return c
 
 
