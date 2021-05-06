@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import sys
 from datetime import date, timedelta
 
 import twint
@@ -162,7 +163,12 @@ def main():
     in_twitter, in_tweets, to_skip = get_conf()
     queries = create_search_queries(in_twitter, in_tweets)
 
-    search_twitter(queries)
+    try:
+        search_twitter(queries)
+    except KeyboardInterrupt:
+        print('\n[-] CTRL-C detected. Exiting...')
+        remove_temp_file()
+        sys.exit(0)
 
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
