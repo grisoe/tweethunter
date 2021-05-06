@@ -86,11 +86,12 @@ def print_tweets(tweets):
 
 
 def get_conf():
+    in_twitter = []
+    in_tweets = []
+    to_skip = []
+
     with open(CONF_FILE) as conf:
         terms = json.load(conf)
-        in_twitter = []
-        in_tweets = []
-        to_skip = []
 
         for term in terms['inTwitter']:
             in_twitter.append(term)
