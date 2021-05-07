@@ -13,6 +13,8 @@ CONF_FILE = 'conf.json'
 TEMP_OUTPUT_FILE = 'temp.json'
 FINAL_OUTPUT_FILE = 'tweets.json'
 
+ALL_COLUMNS = False
+
 
 def get_arguments():
     parser = argparse.ArgumentParser()
@@ -20,6 +22,7 @@ def get_arguments():
     parser.add_argument('-s', '--since', dest="since_date", help="Search since this date.")
     parser.add_argument('-u', '--until', dest="until_date", help="Search until this date.")
     parser.add_argument('-c', '--conf', dest="conf_file", help="Configuration file.")
+    parser.add_argument('-a', '--all-columns', action="store_true", help="Get all columns from tweets.")
 
     options = parser.parse_args()
 
@@ -30,6 +33,7 @@ def set_globals(options):
     global SINCE_DATE
     global UNTIL_DATE
     global CONF_FILE
+    global ALL_COLUMNS
 
     if options.since_date:
         SINCE_DATE = options.since_date
@@ -37,6 +41,8 @@ def set_globals(options):
         UNTIL_DATE = options.until_date
     if options.conf_file:
         CONF_FILE = options.conf_file
+    if options.all_columns:
+        ALL_COLUMNS = True
 
 
 def twint_conf(output_file):
@@ -44,10 +50,13 @@ def twint_conf(output_file):
     c.Hide_output = True
     c.Store_object = True
     c.Store_json = True
-    c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
     c.Output = output_file
     c.Since = SINCE_DATE
     c.Until = UNTIL_DATE
+
+    if not ALL_COLUMNS:
+        c.Custom["tweet"] = ["created_at", "link", "username", "tweet"]
+
     return c
 
 
