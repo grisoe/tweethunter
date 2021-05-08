@@ -11,9 +11,13 @@ from selenium import webdriver
 SINCE_DATE = str((date.today() - timedelta(days=7)).strftime('%Y-%m-%d'))
 UNTIL_DATE = str(date.today())
 
-CONF_FILE = 'conf.json'
-TEMP_OUTPUT_FILE = 'temp.json'
-FINAL_OUTPUT_FILE = 'tweets.json'
+CONF_FOLDER = 'conf'
+JSON_OUTPUT_FOLDER = 'output'
+IMAGES_OUTPUT_FOLDER = 'images'
+
+CONF_FILE = f'{CONF_FOLDER}/conf.json'
+TEMP_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/temp.json'
+FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/tweets.json'
 
 ALL_COLUMNS = False
 SCREENSHOTS = False
@@ -153,14 +157,24 @@ def tweets_to_png():
     for i, link in enumerate(links):
         browser.get(link)
         time.sleep(10)
-        browser.save_screenshot(f'{i}.png')
+        browser.save_screenshot(f'{IMAGES_OUTPUT_FOLDER}/{i}.png')
 
     browser.close()
+
+
+def create_output_folders():
+    if not os.path.exists(IMAGES_OUTPUT_FOLDER):
+        os.makedirs(IMAGES_OUTPUT_FOLDER)
+    if not os.path.exists(JSON_OUTPUT_FOLDER):
+        os.makedirs(JSON_OUTPUT_FOLDER)
+    if not os.path.exists(CONF_FOLDER):
+        os.makedirs(CONF_FOLDER)
 
 
 def main():
     options = get_arguments()
     set_globals(options)
+    create_output_folders()
 
     in_twitter, in_tweets, to_skip = get_conf()
     queries = create_search_queries(in_twitter, in_tweets)
@@ -174,9 +188,8 @@ def main():
 
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
-
-    if SCREENSHOTS:
-        tweets_to_png()
+        if SCREENSHOTS:
+            tweets_to_png()
 
 
 if __name__ == '__main__':
