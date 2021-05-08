@@ -2,9 +2,11 @@ import argparse
 import json
 import os
 import sys
+import time
 from datetime import date, timedelta
 
 import twint
+from selenium import webdriver
 
 SINCE_DATE = str((date.today() - timedelta(days=7)).strftime('%Y-%m-%d'))
 UNTIL_DATE = str(date.today())
@@ -131,7 +133,21 @@ def remove_temp_file():
     os.remove(TEMP_OUTPUT_FILE)
 
 
+def tweets_to_png():
+    driver = webdriver.Firefox()
+    driver.get('https://twitter.com/premierleague/status/1390797107389468679')
+
+    time.sleep(10)
+
+    driver.save_screenshot('screenshot.png')
+    driver.close()
+
+    sys.exit(0)
+
+
 def main():
+    tweets_to_png()
+
     options = get_arguments()
     set_globals(options)
 

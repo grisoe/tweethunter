@@ -5,3 +5,5 @@ conf.json
 temp.json
 tweets.json
 TODO
+geckodriver.log
+screenshot.png
