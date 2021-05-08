@@ -1,9 +1,10 @@
 /.idea/
-/venv/
 /.git/
+/venv/
+/images/
+/conf/
+/output/
 conf.json
 temp.json
 tweets.json
 TODO
-geckodriver.log
-screenshot.png

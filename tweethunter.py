@@ -16,6 +16,7 @@ TEMP_OUTPUT_FILE = 'temp.json'
 FINAL_OUTPUT_FILE = 'tweets.json'
 
 ALL_COLUMNS = False
+SCREENSHOTS = False
 
 
 def get_arguments():
@@ -25,6 +26,7 @@ def get_arguments():
     parser.add_argument('-u', '--until', dest="until_date", help="Search until this date.")
     parser.add_argument('-c', '--conf', dest="conf_file", help="Configuration file.")
     parser.add_argument('-a', '--all-columns', action="store_true", help="Get all columns from tweets.")
+    parser.add_argument('-i', '--screenshots', action="store_true", help="Take screenshots of tweets.")
 
     options = parser.parse_args()
 
@@ -36,6 +38,7 @@ def set_globals(options):
     global UNTIL_DATE
     global CONF_FILE
     global ALL_COLUMNS
+    global SCREENSHOTS
 
     if options.since_date:
         SINCE_DATE = options.since_date
@@ -45,6 +48,8 @@ def set_globals(options):
         CONF_FILE = options.conf_file
     if options.all_columns:
         ALL_COLUMNS = True
+    if options.screenshots:
+        SCREENSHOTS = True
 
 
 def twint_conf(output_file):
@@ -143,13 +148,13 @@ def links_from_file():
 
 def tweets_to_png():
     links = links_from_file()
+    browser = webdriver.Firefox(service_log_path=os.devnull)
 
-    browser = webdriver.Firefox()
-    browser.get('https://twitter.com/premierleague/status/1390797107389468679')
+    for i, link in enumerate(links):
+        browser.get(link)
+        time.sleep(10)
+        browser.save_screenshot(f'{i}.png')
 
-    time.sleep(10)
-
-    browser.save_screenshot('screenshot.png')
     browser.close()
 
 
@@ -170,7 +175,7 @@ def main():
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
 
-        # Move... Or leave...
+    if SCREENSHOTS:
         tweets_to_png()
 
 
