@@ -133,21 +133,27 @@ def remove_temp_file():
     os.remove(TEMP_OUTPUT_FILE)
 
 
+def links_from_file():
+    links = []
+    with open(FINAL_OUTPUT_FILE, 'r+') as f:
+        for line in f:
+            links.append(json.loads(line)['link'])
+    return links
+
+
 def tweets_to_png():
-    driver = webdriver.Firefox()
-    driver.get('https://twitter.com/premierleague/status/1390797107389468679')
+    links = links_from_file()
+
+    browser = webdriver.Firefox()
+    browser.get('https://twitter.com/premierleague/status/1390797107389468679')
 
     time.sleep(10)
 
-    driver.save_screenshot('screenshot.png')
-    driver.close()
-
-    sys.exit(0)
+    browser.save_screenshot('screenshot.png')
+    browser.close()
 
 
 def main():
-    tweets_to_png()
-
     options = get_arguments()
     set_globals(options)
 
@@ -163,6 +169,9 @@ def main():
 
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
+
+        # Move... Or leave...
+        tweets_to_png()
 
 
 if __name__ == '__main__':
