@@ -1,5 +1,6 @@
 import argparse
 import json
+import math
 import os
 import sys
 import time
@@ -21,6 +22,8 @@ FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/tweets.json'
 
 ALL_COLUMNS = False
 SCREENSHOTS = False
+
+SEARCH_TERMS_LIMIT = 45
 
 
 def get_arguments():
@@ -103,13 +106,26 @@ def get_conf():
 
 
 def create_search_queries(in_twitter, in_tweets):
+    terms_ranges = math.ceil(len(in_tweets) / SEARCH_TERMS_LIMIT)
     queries = []
+    c_queries = []
 
-    for in_twitteri in in_twitter:
-        for in_tweetsi in in_tweets:
-            queries.append(f'{in_twitteri} {in_tweetsi}')
+    for i in range(0, terms_ranges):
+        query = ''
+        start = SEARCH_TERMS_LIMIT * i
+        end = start + SEARCH_TERMS_LIMIT
 
-    return queries
+        for j in range(start, end):
+            if j < len(in_tweets):
+                query = query + f' {in_tweets[j]} OR'
+        queries.append(query)
+
+    for term in in_twitter:
+        for query in queries:
+            n_query = f'{term}{query}'[0:-3]
+            c_queries.append(n_query)
+
+    return c_queries
 
 
 def remove_tweets_from_users(to_skip):
