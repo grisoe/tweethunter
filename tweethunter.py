@@ -105,14 +105,9 @@ def get_conf():
 def create_search_queries(in_twitter, in_tweets):
     queries = []
 
-    for termi in range(0, len(in_twitter)):
-        query = ''
-        for term in in_tweets:
-            query = query + f' {term} OR'
-
-        query = query[0:-3]
-        query = in_twitter[termi] + query
-        queries.append(query)
+    for in_twitteri in in_twitter:
+        for in_tweetsi in in_tweets:
+            queries.append(f'{in_twitteri} {in_tweetsi}')
 
     return queries
 
