@@ -11,6 +11,8 @@ import twint
 from PIL import Image
 from selenium import webdriver
 
+CURRENT_TIME = datetime.now().strftime("%H:%M:%S")
+
 SINCE_DATE = str((date.today() - timedelta(days=7)).strftime('%Y-%m-%d'))
 UNTIL_DATE = str(date.today())
 
@@ -18,8 +20,6 @@ CONF_FOLDER = 'conf'
 JSON_OUTPUT_FOLDER = 'output'
 IMAGES_OUTPUT_FOLDER = 'images'
 OUT_FOLDER = date.today().strftime('%Y-%m-%d')
-
-CURRENT_TIME = datetime.now().strftime("%H:%M:%S")
 
 CONF_FILE = f'{CONF_FOLDER}/conf.json'
 TEMP_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/temp.json'
@@ -157,7 +157,8 @@ def file_to_list():
 
 
 def remove_temp_file():
-    os.remove(TEMP_OUTPUT_FILE)
+    if os.path.exists(TEMP_OUTPUT_FILE):
+        os.remove(TEMP_OUTPUT_FILE)
 
 
 def links_from_file():
