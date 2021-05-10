@@ -23,7 +23,9 @@ FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/tweets.json'
 ALL_COLUMNS = False
 SCREENSHOTS = False
 
-SEARCH_TERMS_LIMIT = 45
+# Real one is (sometimes) 48,
+# 47 secondary, plus 1 main.
+SEARCH_TERMS_LIMIT = 30
 
 
 def get_arguments():
