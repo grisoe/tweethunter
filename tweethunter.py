@@ -173,11 +173,13 @@ def tweets_to_png_cropped():
     links = links_from_file()
 
     if links:
-        xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/section/div/div/div[1]/div/div'
         browser = webdriver.Firefox(service_log_path=os.devnull)
+        xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/' \
+                'div[2]/div/section/div/div/div[1]/div/div/article/div'
 
         for i, link in enumerate(links):
             browser.get(link)
+            browser.maximize_window()
             time.sleep(10)
 
             element = browser.find_element_by_xpath(xpath)
@@ -193,7 +195,7 @@ def tweets_to_png_cropped():
             bottom = location['y'] + size['height']
 
             im = im.crop((left, top, right, bottom))
-            im.save(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i}.png')
+            im.save(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i + 1}.png')
 
         browser.close()
 
@@ -207,7 +209,7 @@ def tweets_to_png_full():
         for i, link in enumerate(links):
             browser.get(link)
             time.sleep(10)
-            browser.save_screenshot(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i}.png')
+            browser.save_screenshot(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i + 1}.png')
         browser.close()
 
 
@@ -247,7 +249,7 @@ def main():
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
     if SCREENSHOTS:
-        tweets_to_png_full()
+        tweets_to_png_cropped()
 
 
 if __name__ == '__main__':
