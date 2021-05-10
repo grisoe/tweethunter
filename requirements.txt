@@ -18,6 +18,7 @@ idna==2.10
 multidict==5.1.0
 numpy==1.20.2
 pandas==1.2.4
+Pillow==8.2.0
 pkg-resources==0.0.0
 pycares==3.1.1
 pycparser==2.20

@@ -5,8 +5,10 @@ import os
 import sys
 import time
 from datetime import date, timedelta, datetime
+from io import BytesIO
 
 import twint
+from PIL import Image
 from selenium import webdriver
 
 SINCE_DATE = str((date.today() - timedelta(days=7)).strftime('%Y-%m-%d'))
@@ -167,7 +169,36 @@ def links_from_file():
     return links
 
 
-def tweets_to_png():
+def tweets_to_png_cropped():
+    links = links_from_file()
+
+    if links:
+        xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/section/div/div/div[1]/div/div'
+        browser = webdriver.Firefox(service_log_path=os.devnull)
+
+        for i, link in enumerate(links):
+            browser.get(link)
+            time.sleep(10)
+
+            element = browser.find_element_by_xpath(xpath)
+            location = element.location
+            size = element.size
+
+            png = browser.get_screenshot_as_png()
+            im = Image.open(BytesIO(png))
+
+            left = location['x']
+            top = location['y']
+            right = location['x'] + size['width']
+            bottom = location['y'] + size['height']
+
+            im = im.crop((left, top, right, bottom))
+            im.save(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i}.png')
+
+        browser.close()
+
+
+def tweets_to_png_full():
     links = links_from_file()
 
     if links:
@@ -177,7 +208,6 @@ def tweets_to_png():
             browser.get(link)
             time.sleep(10)
             browser.save_screenshot(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i}.png')
-
         browser.close()
 
 
@@ -217,7 +247,7 @@ def main():
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
     if SCREENSHOTS:
-        tweets_to_png()
+        tweets_to_png_full()
 
 
 if __name__ == '__main__':
