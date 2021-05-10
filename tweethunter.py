@@ -4,7 +4,7 @@ import math
 import os
 import sys
 import time
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 import twint
 from selenium import webdriver
@@ -15,10 +15,11 @@ UNTIL_DATE = str(date.today())
 CONF_FOLDER = 'conf'
 JSON_OUTPUT_FOLDER = 'output'
 IMAGES_OUTPUT_FOLDER = 'images'
+OUT_FOLDER = date.today().strftime('%Y-%m-%d')
 
 CONF_FILE = f'{CONF_FOLDER}/conf.json'
 TEMP_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/temp.json'
-FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/tweets.json'
+FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}/{datetime.now().strftime("%H:%M:%S")}.json'
 
 ALL_COLUMNS = False
 SCREENSHOTS = False
@@ -183,6 +184,9 @@ def create_output_folders():
     if not os.path.exists(CONF_FOLDER):
         os.makedirs(CONF_FOLDER)
 
+    if not os.path.exists(f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}'):
+        os.makedirs(f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}')
+
 
 def main():
     options = get_arguments()
@@ -201,8 +205,8 @@ def main():
 
     if os.path.exists(TEMP_OUTPUT_FILE):
         remove_tweets_from_users(to_skip)
-        if SCREENSHOTS:
-            tweets_to_png()
+    if SCREENSHOTS:
+        tweets_to_png()
 
 
 if __name__ == '__main__':
