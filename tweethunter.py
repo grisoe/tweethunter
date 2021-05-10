@@ -169,6 +169,7 @@ def links_from_file():
 
 def tweets_to_png():
     links = links_from_file()
+
     if links:
         browser = webdriver.Firefox(service_log_path=os.devnull)
 
@@ -181,8 +182,6 @@ def tweets_to_png():
 
 
 def create_output_folders():
-    if not os.path.exists(IMAGES_OUTPUT_FOLDER):
-        os.makedirs(IMAGES_OUTPUT_FOLDER)
     if not os.path.exists(JSON_OUTPUT_FOLDER):
         os.makedirs(JSON_OUTPUT_FOLDER)
     if not os.path.exists(CONF_FOLDER):
@@ -190,10 +189,12 @@ def create_output_folders():
 
     if not os.path.exists(f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}'):
         os.makedirs(f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}')
-    if not os.path.exists(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}'):
-        os.makedirs(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}')
 
     if SCREENSHOTS:
+        if not os.path.exists(IMAGES_OUTPUT_FOLDER):
+            os.makedirs(IMAGES_OUTPUT_FOLDER)
+        if not os.path.exists(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}'):
+            os.makedirs(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}')
         if not os.path.exists(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}'):
             os.makedirs(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}')
 
