@@ -17,9 +17,11 @@ JSON_OUTPUT_FOLDER = 'output'
 IMAGES_OUTPUT_FOLDER = 'images'
 OUT_FOLDER = date.today().strftime('%Y-%m-%d')
 
+CURRENT_TIME = datetime.now().strftime("%H:%M:%S")
+
 CONF_FILE = f'{CONF_FOLDER}/conf.json'
 TEMP_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/temp.json'
-FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}/{datetime.now().strftime("%H:%M:%S")}.json'
+FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}.json'
 
 ALL_COLUMNS = False
 SCREENSHOTS = False
@@ -158,22 +160,24 @@ def remove_temp_file():
 
 def links_from_file():
     links = []
-    with open(FINAL_OUTPUT_FILE, 'r+') as f:
-        for line in f:
-            links.append(json.loads(line)['link'])
+    if os.path.exists(FINAL_OUTPUT_FILE):
+        with open(FINAL_OUTPUT_FILE, 'r+') as f:
+            for line in f:
+                links.append(json.loads(line)['link'])
     return links
 
 
 def tweets_to_png():
     links = links_from_file()
-    browser = webdriver.Firefox(service_log_path=os.devnull)
+    if links:
+        browser = webdriver.Firefox(service_log_path=os.devnull)
 
-    for i, link in enumerate(links):
-        browser.get(link)
-        time.sleep(10)
-        browser.save_screenshot(f'{IMAGES_OUTPUT_FOLDER}/{i}.png')
+        for i, link in enumerate(links):
+            browser.get(link)
+            time.sleep(10)
+            browser.save_screenshot(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i}.png')
 
-    browser.close()
+        browser.close()
 
 
 def create_output_folders():
@@ -186,6 +190,12 @@ def create_output_folders():
 
     if not os.path.exists(f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}'):
         os.makedirs(f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}')
+    if not os.path.exists(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}'):
+        os.makedirs(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}')
+
+    if SCREENSHOTS:
+        if not os.path.exists(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}'):
+            os.makedirs(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}')
 
 
 def main():
