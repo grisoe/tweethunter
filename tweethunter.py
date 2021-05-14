@@ -10,7 +10,6 @@ from io import BytesIO
 import twint
 from PIL import Image
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 
 CURRENT_TIME = datetime.now().strftime("%H:%M:%S")
 
@@ -28,6 +27,7 @@ FINAL_OUTPUT_FILE = f'{JSON_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}.json'
 
 ALL_COLUMNS = False
 SCREENSHOTS = False
+HEADLESS = False
 
 # Real one is (sometimes) 48,
 # 47 secondary, plus 1 main.
@@ -40,8 +40,9 @@ def get_arguments():
     parser.add_argument('-s', '--since', dest="since_date", help="Search since this date.")
     parser.add_argument('-u', '--until', dest="until_date", help="Search until this date.")
     parser.add_argument('-c', '--conf', dest="conf_file", help="Configuration file.")
-    parser.add_argument('-a', '--all-columns', action="store_true", help="Get all columns from tweets.")
-    parser.add_argument('-i', '--screenshots', action="store_true", help="Take screenshots of tweets.")
+    parser.add_argument('-ac', '--all-columns', action="store_true", help="Get all columns from tweets.")
+    parser.add_argument('-ss', '--screenshots', action="store_true", help="Take screenshots of tweets.")
+    parser.add_argument('-hl', '--headless', action="store_true", help="Headless screenshots.")
 
     options = parser.parse_args()
 
@@ -54,6 +55,7 @@ def set_globals(options):
     global CONF_FILE
     global ALL_COLUMNS
     global SCREENSHOTS
+    global HEADLESS
 
     if options.since_date:
         SINCE_DATE = options.since_date
@@ -65,6 +67,8 @@ def set_globals(options):
         ALL_COLUMNS = True
     if options.screenshots:
         SCREENSHOTS = True
+    if SCREENSHOTS and options.headless:
+        HEADLESS = True
 
 
 def twint_conf(output_file):
@@ -175,9 +179,12 @@ def tweets_to_png_cropped():
     links = links_from_file()
 
     if links:
-        ff_options = webdriver.FirefoxOptions()
-        ff_options.headless = True
-        browser = webdriver.Firefox(options=ff_options, service_log_path=os.devnull)
+        if HEADLESS:
+            ff_options = webdriver.FirefoxOptions()
+            ff_options.headless = True
+            browser = webdriver.Firefox(options=ff_options, service_log_path=os.devnull)
+        else:
+            browser = webdriver.Firefox(service_log_path=os.devnull)
 
         xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/' \
                 'div[2]/div/section/div/div/div[1]/div/div/article/div'
@@ -193,6 +200,11 @@ def tweets_to_png_cropped():
 
             png = browser.get_screenshot_as_png()
             im = Image.open(BytesIO(png))
+
+            if HEADLESS:
+                print(f'[+] Taking screenshots. '
+                      f'This could take a long time: '
+                      f'{i + 1} of {len(links)}', end='\r')
 
             left = location['x']
             top = location['y']
