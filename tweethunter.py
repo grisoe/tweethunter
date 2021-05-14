@@ -10,6 +10,7 @@ from io import BytesIO
 import twint
 from PIL import Image
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 
 CURRENT_TIME = datetime.now().strftime("%H:%M:%S")
 
@@ -174,7 +175,10 @@ def tweets_to_png_cropped():
     links = links_from_file()
 
     if links:
-        browser = webdriver.Firefox(service_log_path=os.devnull)
+        ff_options = webdriver.FirefoxOptions()
+        ff_options.headless = True
+        browser = webdriver.Firefox(options=ff_options, service_log_path=os.devnull)
+
         xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/' \
                 'div[2]/div/section/div/div/div[1]/div/div/article/div'
 
