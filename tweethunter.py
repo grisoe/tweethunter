@@ -42,7 +42,7 @@ def get_arguments():
     parser.add_argument('-c', '--conf', dest="conf_file", help="Configuration file.")
     parser.add_argument('-ac', '--all-columns', action="store_true", help="Get all columns from tweets.")
     parser.add_argument('-ss', '--screenshots', action="store_true", help="Take screenshots of tweets.")
-    parser.add_argument('-hl', '--headless', action="store_true", help="Headless screenshots.")
+    parser.add_argument('-hl', '--headless', action="store_true", help="Headless screenshots (experimental).")
 
     options = parser.parse_args()
 
