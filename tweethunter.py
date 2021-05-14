@@ -190,31 +190,40 @@ def tweets_to_png_cropped():
                 'div[2]/div/section/div/div/div[1]/div/div/article/div'
 
         for i, link in enumerate(links):
-            browser.get(link)
-            browser.maximize_window()
-            time.sleep(10)
-
-            element = browser.find_element_by_xpath(xpath)
-            location = element.location
-            size = element.size
-
-            png = browser.get_screenshot_as_png()
-            im = Image.open(BytesIO(png))
-
             if HEADLESS:
                 print(f'[+] Taking screenshots. '
                       f'This could take a long time: '
                       f'{i + 1} of {len(links)}', end='\r')
 
-            left = location['x']
-            top = location['y']
-            right = location['x'] + size['width']
-            bottom = location['y'] + size['height']
-
-            im = im.crop((left, top, right, bottom))
-            im.save(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{i + 1}.png')
+            png, location, size = take_screenshot(browser, link, xpath)
+            crop_and_save_screenshot(png, location, size, i)
 
         browser.close()
+
+
+def take_screenshot(browser, link, xpath):
+    browser.get(link)
+    browser.maximize_window()
+    time.sleep(10)
+
+    element = browser.find_element_by_xpath(xpath)
+    location = element.location
+    size = element.size
+
+    png = browser.get_screenshot_as_png()
+
+    return png, location, size
+
+
+def crop_and_save_screenshot(image, location, size, number):
+    im = Image.open(BytesIO(image))
+    left = location['x']
+    top = location['y']
+    right = location['x'] + size['width']
+    bottom = location['y'] + size['height']
+
+    im = im.crop((left, top, right, bottom))
+    im.save(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{number + 1}.png')
 
 
 def tweets_to_png_full():
