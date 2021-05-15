@@ -9,8 +9,12 @@ from io import BytesIO
 
 import twint
 from PIL import Image
+from colorama import init, Fore
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+
+# Init colorama.
+init()
 
 CURRENT_TIME = datetime.now().strftime("%H:%M:%S")
 
@@ -179,6 +183,9 @@ def links_from_file():
 def tweets_to_png_cropped():
     links = links_from_file()
 
+    xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/' \
+            'div[2]/div/section/div/div/div[1]/div/div/article/div'
+
     if links:
         try:
             if HEADLESS:
@@ -188,14 +195,13 @@ def tweets_to_png_cropped():
             else:
                 browser = webdriver.Firefox(service_log_path=os.devnull)
 
-            xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/' \
-                    'div[2]/div/section/div/div/div[1]/div/div/article/div'
-
             for i, link in enumerate(links):
                 if HEADLESS:
-                    print(f'[+] Taking screenshots. '
+                    print(Fore.GREEN +
+                          f'[+] Taking screenshots. '
                           f'This could take a long time: '
-                          f'{i + 1} of {len(links)}', end='\r')
+                          f'{i + 1} of {len(links)}',
+                          end='\r' if link != links[-1] else '\n')
 
                 png, location, size = take_screenshot(browser, link, xpath)
                 crop_and_save_screenshot(png, location, size, i)
@@ -203,11 +209,8 @@ def tweets_to_png_cropped():
             browser.close()
 
         except (NoSuchElementException, KeyboardInterrupt):
-            print('\n[-] CTRL-C detected. Exiting...')
-            remove_temp_file()
+            print(Fore.RED + '\n[-] CTRL-C detected. Exiting...')
             sys.exit(0)
-
-        browser.close()
 
 
 def take_screenshot(browser, link, xpath):
@@ -277,7 +280,7 @@ def main():
     try:
         search_twitter(queries)
     except KeyboardInterrupt:
-        print('\n[-] CTRL-C detected. Exiting...')
+        print(Fore.RED + '\n[-] CTRL-C detected. Exiting...')
         remove_temp_file()
         sys.exit(0)
 
