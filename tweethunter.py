@@ -10,6 +10,7 @@ from io import BytesIO
 import twint
 from PIL import Image
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 
 CURRENT_TIME = datetime.now().strftime("%H:%M:%S")
 
@@ -179,24 +180,32 @@ def tweets_to_png_cropped():
     links = links_from_file()
 
     if links:
-        if HEADLESS:
-            ff_options = webdriver.FirefoxOptions()
-            ff_options.headless = True
-            browser = webdriver.Firefox(options=ff_options, service_log_path=os.devnull)
-        else:
-            browser = webdriver.Firefox(service_log_path=os.devnull)
-
-        xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/' \
-                'div[2]/div/section/div/div/div[1]/div/div/article/div'
-
-        for i, link in enumerate(links):
+        try:
             if HEADLESS:
-                print(f'[+] Taking screenshots. '
-                      f'This could take a long time: '
-                      f'{i + 1} of {len(links)}', end='\r')
+                ff_options = webdriver.FirefoxOptions()
+                ff_options.headless = True
+                browser = webdriver.Firefox(options=ff_options, service_log_path=os.devnull)
+            else:
+                browser = webdriver.Firefox(service_log_path=os.devnull)
 
-            png, location, size = take_screenshot(browser, link, xpath)
-            crop_and_save_screenshot(png, location, size, i)
+            xpath = '/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/' \
+                    'div[2]/div/section/div/div/div[1]/div/div/article/div'
+
+            for i, link in enumerate(links):
+                if HEADLESS:
+                    print(f'[+] Taking screenshots. '
+                          f'This could take a long time: '
+                          f'{i + 1} of {len(links)}', end='\r')
+
+                png, location, size = take_screenshot(browser, link, xpath)
+                crop_and_save_screenshot(png, location, size, i)
+
+            browser.close()
+
+        except (NoSuchElementException, KeyboardInterrupt):
+            print('\n[-] CTRL-C detected. Exiting...')
+            remove_temp_file()
+            sys.exit(0)
 
         browser.close()
 
