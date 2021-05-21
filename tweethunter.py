@@ -228,16 +228,17 @@ def take_screenshot(browser, link, xpath):
 
 
 def crop_and_save_screenshot(image, location, size, number):
-    im = Image.open(BytesIO(image))
+    img = Image.open(BytesIO(image))
     left = location['x']
     top = location['y']
     right = location['x'] + size['width']
     bottom = location['y'] + size['height']
 
-    im = im.crop((left, top, right, bottom))
-    im.save(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{number + 1}.png')
+    img = img.crop((left, top, right, bottom))
+    img.save(f'{IMAGES_OUTPUT_FOLDER}/{OUT_FOLDER}/{CURRENT_TIME}/{number + 1}.png')
 
 
+# Unused.
 def tweets_to_png_full():
     links = links_from_file()
 
