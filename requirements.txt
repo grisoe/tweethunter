@@ -34,5 +34,5 @@ six==1.15.0
 soupsieve==2.2.1
 -e git+https://github.com/twintproject/twint.git@e7c8a0c764f6879188e5c21e25fb6f1f856a7221#egg=twint
 typing-extensions==3.7.4.3
-urllib3==1.26.4
+urllib3==1.26.5
 yarl==1.6.3
