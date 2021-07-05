@@ -23,7 +23,7 @@ Next, paste this structure into the configuration file. In the "inTwitter" array
 need at least one main term. The "inTweets" array stores the secondary terms; for example, if you want the tweets that
 have the word "myApp", along with at least one of these terms: hacked, vulnerable, bug, exploit, etc., you need to put
 the term "myApp" in inTwitter and "hacked", "vulnerable", "bug", exploit in "inTweets" (at most 30 terms). 
-The "remove" array stores the names of the Twitter account you do not want tweets from.
+The "remove" array stores the names of the Twitter accounts you do not want tweets from.
 ```json
 {
   "inTwitter": [
@@ -38,7 +38,6 @@ The "remove" array stores the names of the Twitter account you do not want tweet
     "twitter"
   ]
 }
-
 ```
 
 
