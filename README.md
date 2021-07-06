@@ -80,7 +80,7 @@ Alternatively, you can run tweethunter using Docker.
 If you want the output of the execution of tweethunter to be saved in the host machine, first you need to create the
 folder and set the permissions.
 ```bash
-mkdir docker
+mkdir docker && mkdir docker/output && mkdir docker/images
 chown -R :1024 docker
 chmod -R 775 docker
 chmod -R g+s docker
