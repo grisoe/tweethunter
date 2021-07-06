@@ -77,10 +77,8 @@ python tweethunter.py -ac
 ## Docker
 Alternatively, you can run tweethunter using Docker.
 ### Prerequisites
-If you want the output of the execution of tweethunter to be saved in the host machine, first you need to create the
-folder and set the permissions.
+For the output to be saved in the host machine, first you need to change the permissions of the docker folder.
 ```bash
-mkdir docker && mkdir docker/output && mkdir docker/images
 chown -R :1024 docker
 chmod -R 775 docker
 chmod -R g+s docker
@@ -91,8 +89,13 @@ docker build -t tweethunter .
 ```
 ### Run Image as a Container
 ```bash
-docker run -it --rm -v "$PWD/docker/output":/home/th/output -v "$PWD/docker/images":/home/th/images -v "$PWD/conf":/home/th/conf tweethunter
+docker run -it --rm \
+  -v "$PWD/docker/output":/home/th/output \
+  -v "$PWD/docker/images":/home/th/images \
+  -v "$PWD/conf":/home/th/conf \
+  tweethunter arg1 arg2 ...
 ```
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
