@@ -12,9 +12,8 @@ WORKDIR /th
 RUN mkdir conf
 
 COPY tweethunter.py requirements.txt /th/
-COPY conf/test.json /th/conf
+COPY conf/conf.json /th/conf
 
-RUN mv /th/conf/test.json /th/conf/conf.json
 RUN pip3 install -r requirements.txt
 
 #CMD ["tweethunter.py"]
