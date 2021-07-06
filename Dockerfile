@@ -7,12 +7,14 @@ RUN apt-get install -y wget git firefox firefox-geckodriver python3.8 python3-pi
     rm -rf /var/lib/apt/lists/* && \
     apt clean
 
-WORKDIR /th
+RUN addgroup --gid 1024 th && \
+    adduser --disabled-password --gecos "" --force-badname --ingroup th th
 
-RUN mkdir conf
+USER th
 
-COPY tweethunter.py requirements.txt /th/
-COPY conf/conf.json /th/conf
+WORKDIR /home/th
+
+COPY requirements.txt tweethunter.py /home/th/
 
 RUN pip3 install -r requirements.txt
 

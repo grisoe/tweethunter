@@ -4,5 +4,6 @@
 /images/
 /conf/
 /output/
+/docker/
 TODO
 .Dockerfile.swp
