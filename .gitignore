@@ -5,6 +5,5 @@
 /conf/*.json
 !conf/conf.json
 /output/
-/docker/
 TODO
 .Dockerfile.swp
