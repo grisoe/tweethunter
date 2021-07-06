@@ -1,0 +1,15 @@
+{
+  "inTwitter": [
+    "torvalds",
+    "ritchie"
+  ],
+  "inTweets": [
+    "linux",
+    "unix",
+    "computers"
+  ],
+  "remove": [
+    "microsoft",
+    "apple"
+  ]
+}

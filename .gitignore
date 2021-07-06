@@ -2,8 +2,8 @@
 /.git/
 /venv/
 /images/
-/conf/
-!/conf/conf.json
+/conf/*.json
+!conf/conf.json
 /output/
 /docker/
 TODO
