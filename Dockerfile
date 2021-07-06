@@ -7,8 +7,14 @@ RUN apt-get install -y wget git firefox firefox-geckodriver python3.8 python3-pi
     rm -rf /var/lib/apt/lists/* && \
     apt clean
 
-COPY . /
+WORKDIR /th
 
+RUN mkdir conf
+
+COPY tweethunter.py requirements.txt /th/
+COPY conf/test.json /th/conf
+
+RUN mv /th/conf/test.json /th/conf/conf.json
 RUN pip3 install -r requirements.txt
 
 #CMD ["tweethunter.py"]
