@@ -3,6 +3,7 @@
 /venv/
 /images/
 /conf/
+!/conf/conf.json
 /output/
 /docker/
 TODO
