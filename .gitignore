@@ -4,6 +4,10 @@
 /images/
 /conf/*.json
 !conf/conf.json
+/docker/images/*
+/docker/output/*
+!docker/images/.gitkeep
+!docker/output/.gitkeep
 /output/
 TODO
 .Dockerfile.swp
