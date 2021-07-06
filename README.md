@@ -5,7 +5,6 @@ a json file with all the tweets found and their information. Written and tested 
 
 ## Requirements
 Use the apt package manager to install the webdriver for Firefox.
-
 ```bash
 sudo apt install firefox-geckodriver
 ```
@@ -14,28 +13,27 @@ Next, use pip to install the required libraries.
 pip install -r requirements.txt
 ```
 
-You also need to create a configuration file in which the terms will be stored.
-```bash
-mkdir conf
-touch conf/conf.json
-```
-Next, paste this structure into the configuration file. In the "inTwitter" array are the main terms of the search, you
-need at least one main term. The "inTweets" array stores the secondary terms; for example, if you want the tweets that
-have the word "myApp", along with at least one of these terms: hacked, vulnerable, bug, exploit, etc., you need to put
-the term "myApp" in inTwitter and "hacked", "vulnerable", "bug", exploit in "inTweets". 
+
+## Configuration File
+You need to edit the file conf.json located in the conf folder. In the "inTwitter" array are the main terms of the 
+search, you need at least one main term. The "inTweets" array stores the secondary terms; for example, if you want the 
+tweets that have the word "torvalds", along with at least one of these terms: linux, unix, computers, etc., you 
+need to put the term "torvalds" in inTwitter and "linux", "unix", "computers" in "inTweets". 
 The "remove" array stores the names of the Twitter accounts you do not want tweets from.
 ```json
 {
   "inTwitter": [
-    "fooMain",
-    "barMain"
+    "torvalds",
+    "ritchie"
   ],
   "inTweets": [
-    "fooSec",
-    "barSec"
+    "linux",
+    "unix",
+    "computers"
   ],
   "remove": [
-    "twitter"
+    "microsoft",
+    "apple"
   ]
 }
 ```
@@ -52,7 +50,6 @@ The "remove" array stores the names of the Twitter accounts you do not want twee
 | -ss, --screenshots | Take screenshots of tweets (experimental). |
 | -hl, --headless | Headless screenshots (experimental). |
 
-
 ### Usage examples
 Get tweets between a date range. If not used, the tweets returned are from seven days ago until the current day.
 ```bash
@@ -60,7 +57,7 @@ python tweethunter.py -s "2020-01-12" -u "2021-01-12"
 ```
 Specify a configuration file. If unsed, then conf/conf.json is used as the default.
 ```bash
-python tweethunter.py -c "conf/config.json"
+python tweethunter.py -c "conf/custom_config.json"
 ```
 Take screenshots of the tweets found.
 ```bash
@@ -76,6 +73,26 @@ Get all columns from the tweets.
 python tweethunter.py -ac
 ```
 
+
+## Docker
+Alternatively, you can run tweethunter using Docker.
+### Prerequisites
+If you want the output of the execution of tweethunter to be saved in the host machine, first you need to create the
+folder and set the permissions.
+```bash
+mkdir docker
+chown -R :1024 docker
+chmod -R 775 docker
+chmod -R g+s docker
+```
+### Build Image
+```bash
+docker build -t tweethunter .
+```
+### Run Image as a Container
+```bash
+docker run -it --rm -v "$PWD/docker/output":/home/th/output -v "$PWD/docker/images":/home/th/images -v "$PWD/conf":/home/th/conf tweethunter
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

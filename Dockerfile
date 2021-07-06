@@ -17,6 +17,3 @@ WORKDIR /home/th
 COPY requirements.txt tweethunter.py /home/th/
 
 RUN pip3 install -r requirements.txt
-
-#CMD ["tweethunter.py"]
-#ENTRYPOINT ["python3"]
