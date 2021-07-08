@@ -76,17 +76,12 @@ python tweethunter.py -ac
 
 ## Docker
 Alternatively, you can run tweethunter using Docker.
-### Prerequisites
-For the output to be saved in the host machine, first you need to change the permissions of the docker folder.
-```bash
-chown -R :1024 docker
-chmod -R 775 docker
-chmod -R g+s docker
-```
+
 ### Build Image
 ```bash
 docker build -t tweethunter .
 ```
+
 ### Run Image as a Container
 ```bash
 docker run -it --rm \
@@ -94,6 +89,32 @@ docker run -it --rm \
   -v "$PWD/docker/images":/home/th/images \
   -v "$PWD/conf":/home/th/conf \
   tweethunter arg1 arg2 ...
+```
+
+### Pull from Docker Hub
+```bash
+docker pull sergiormh/tweethunter
+```
+
+### Run Pulled Image
+First, you need to create the folders in which the output will be stored.
+```bash
+mkdir docker && \
+  mkdir docker/output && \
+  mkdir docker/images
+```
+Next, create the folder in which the configuration files will be stored. Inside this folder, you have tu create your
+own configuration file. Referer to the Configuration File section for more information on this topic.
+```bash
+mkdir conf
+```
+It is now ready to be run.
+```bash
+docker run -it --rm \
+  -v "$PWD/docker/output":/home/th/output \
+  -v "$PWD/docker/images":/home/th/images \
+  -v "$PWD/conf":/home/th/conf \
+  sergiormh/tweethunter arg1 arg2 ...
 ```
 
 
