@@ -1,6 +1,9 @@
 # tweethunter
-Tweethunter is a Python script to search for tweets containing a main term and at least one secondary term. It returns
-a json file with all the tweets found and their information. Written and tested using Python 3.8.10.
+tweethunter is a Python script to make queries containing a huge number of terms using 
+[Twint](https://github.com/twintproject/twint). It can also take screenshots of the tweets found. 
+Feel free to use this tool if you are lazy enough to run Twint multiple times.
+
+Written and tested using Python 3.8.10 on Ubuntu 20.04.2.
 
 
 ## Requirements
@@ -15,11 +18,11 @@ pip install -r requirements.txt
 
 
 ## Configuration File
-You need to edit the file conf.json located in the conf folder. In the "inTwitter" array are the main terms of the 
-search, you need at least one main term. The "inTweets" array stores the secondary terms; for example, if you want the 
-tweets that have the word "torvalds", along with at least one of these terms: linux, unix, computers, etc., you 
-need to put the term "torvalds" in inTwitter and "linux", "unix", "computers" in "inTweets". 
-The "remove" array stores the names of the Twitter accounts you do not want tweets from.
+You need to edit the file conf.json located in the conf folder. In the inTwitter array are the main terms of the 
+search; you need at least one. The inTweets array stores the secondary terms; for example, if you want the 
+tweets that have the word "torvalds", along with at least one of these terms: "linux", "unix", "computers", etc., you 
+need to put the term "torvalds" in inTwitter and "linux", "unix", "computers" in inTweets. 
+The remove array stores the names of the Twitter accounts you do not want tweets from.
 ```json
 {
   "inTwitter": [
@@ -43,9 +46,9 @@ The "remove" array stores the names of the Twitter accounts you do not want twee
 | Argument        | Description |
 | ------------- |:-------------|
 | -h, --help | Display a help message and exit. |
-| -s, --since | Search since this date. |
-| -u, --until | Search until this date. |
-| -c, --conf | Configuration file path. |
+| -s, --since | Search since this date. Format: YYYY/MM/DD |
+| -u, --until | Search until this date. Format: YYYY/MM/DD |
+| -c, --conf | Configuration file path. conf/conf.json if not specified. |
 | -ac, --all-columns | Get all columns from tweets. |
 | -ss, --screenshots | Take screenshots of tweets (experimental). |
 | -hl, --headless | Headless screenshots (experimental). |
@@ -55,11 +58,11 @@ Get tweets between a date range. If not used, the tweets returned are from seven
 ```bash
 python tweethunter.py -s "2020-01-12" -u "2021-01-12"
 ```
-Specify a configuration file. If unsed, then conf/conf.json is used as the default.
+Specify a configuration file.
 ```bash
 python tweethunter.py -c "conf/custom_config.json"
 ```
-Take screenshots of the tweets found.
+Take screenshots of the tweets found. If you are using the Docker version, you have to use the -hl argument, too.
 ```bash
 python tweethunter.py -ss
 ```
@@ -68,7 +71,7 @@ then this one is ignored.
 ```bash
 python tweethunter.py -ss -hl
 ```
-Get all columns from the tweets.
+Get all columns.
 ```bash
 python tweethunter.py -ac
 ```
@@ -88,7 +91,7 @@ docker run -it --rm \
   -v "$PWD/docker/output":/home/th/output \
   -v "$PWD/docker/images":/home/th/images \
   -v "$PWD/conf":/home/th/conf \
-  tweethunter arg1 arg2 ...
+  tweethunter ARGS
 ```
 
 ### Pull from Docker Hub
@@ -104,7 +107,7 @@ mkdir docker && \
   mkdir docker/images
 ```
 Next, create the folder in which the configuration files will be stored. Inside this folder, you have tu create your
-own configuration file. Referer to the Configuration File section for more information on this topic.
+own configuration file. Referer to the [Configuration File](#configuration-file) section for more information on this topic.
 ```bash
 mkdir conf
 ```
@@ -114,7 +117,7 @@ docker run -it --rm \
   -v "$PWD/docker/output":/home/th/output \
   -v "$PWD/docker/images":/home/th/images \
   -v "$PWD/conf":/home/th/conf \
-  sergiormh/tweethunter arg1 arg2 ...
+  sergiormh/tweethunter ARGS
 ```
 
 
